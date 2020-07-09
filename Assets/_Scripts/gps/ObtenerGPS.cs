@@ -20,6 +20,7 @@ public class ObtenerGPS : MonoBehaviour
     //private double calcPosZ;
     private float nowPosX;
     private float nowPosZ;
+    private bool modoDebug = true;
 
     IEnumerator Start()
     {
@@ -28,8 +29,11 @@ public class ObtenerGPS : MonoBehaviour
         //probar si esta activado el servicio
         if (!Input.location.isEnabledByUser)
         {
-            DebugText.text += "gps no activado";
-            Debug.Log("gps no activado");
+            if (modoDebug)
+            {
+                DebugText.text += "gps no activado";
+                Debug.Log("gps no activado");
+            }
             //yield break;
         }
 
@@ -48,25 +52,34 @@ public class ObtenerGPS : MonoBehaviour
         //si no inicia en 20 segundos
         if (maxWait < 1)
         {
-            DebugText.text += "\n" + "tiempo acabado";
-            Debug.Log("tiempo acabado");
+            if (modoDebug)
+            {
+                DebugText.text += "\n" + "tiempo acabado";
+                Debug.Log("tiempo acabado");
+            }
             yield break;
         }
 
         //conexion fallida
         if (Input.location.status == LocationServiceStatus.Failed)
         {
-            DebugText.text += "\n" + "imposible determinar ubicacion por gps";
-            Debug.Log("imposible determinar ubicacion por gps");
+            if (modoDebug)
+            {
+                DebugText.text += "\n" + "imposible determinar ubicacion por gps";
+                Debug.Log("imposible determinar ubicacion por gps");
+            }
             yield break;
         }
         else
         {
             //acceso aceptado
-            Debug.Log("GPS aceptado");
-            DebugText.text += "\n" + "GPS aceptado";
-            Debug.Log("gps: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
-            DebugText.text += "\n" + "gps: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp;
+            if (modoDebug)
+            {
+                Debug.Log("GPS aceptado");
+                DebugText.text += "\n" + "GPS aceptado";
+                Debug.Log("gps: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
+                DebugText.text += "\n" + "gps: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp;
+            }
             /*if (!primerPos)
             {
                 firstPosX = Input.location.lastData.latitude;
@@ -80,23 +93,26 @@ public class ObtenerGPS : MonoBehaviour
         var Ldat = Input.location.lastData;
         nowPosX = Ldat.latitude;
         nowPosZ = Ldat.longitude;
-        testo = "Latitud: " + Ldat.latitude;
-        testo += "\n" + "Longitud: " + Ldat.longitude;
-        testo += "\n" + "Altitud: " + Ldat.altitude;
-        testo += "\n" + "Precision horizontal: " + Ldat.horizontalAccuracy;
-        testo += "\n" + "Precision vertical: " + Ldat.verticalAccuracy;
-        testo += "\n" + "Timestamp: " + Ldat.timestamp;
-        testo += "\n" + "Update´s: " + Time.time;
-        testo += "\n" + "\n" + "valor x: " + nowPosX;
-        testo += "\n" + "valor z: " + nowPosZ;
-        testo += "\n" + "\n" + "valor x(x10): " + (nowPosX * 10);
-        testo += "\n" + "valor z(x10): " + (nowPosZ * 10);
-        testo += "\n" + "\n" + "compass trueHeading: " + Input.compass.trueHeading;
+        if (modoDebug)
+        {
+            testo = "\n" + "Latitud: " + Ldat.latitude;
+            testo += "\n" + "Longitud: " + Ldat.longitude;
+            testo += "\n" + "Altitud: " + Ldat.altitude;
+            testo += "\n" + "Precision horizontal: " + Ldat.horizontalAccuracy;
+            testo += "\n" + "Precision vertical: " + Ldat.verticalAccuracy;
+            testo += "\n" + "Update´s: " + Time.time;
+            testo += "\n" + "\n" + "valor x: " + nowPosX;
+            testo += "\n" + "valor z: " + nowPosZ;
+            testo += "\n" + "\n" + "valor x(x10): " + (nowPosX * 10);
+            testo += "\n" + "valor z(x10): " + (nowPosZ * 10);
+            testo += "\n" + "\n" + "compass trueHeading: " + Input.compass.trueHeading;
+        }
+        //testo += "\n" + "Timestamp: " + Ldat.timestamp;
         //testo += "\n" + "compass trueHeading(offset): " + (Input.compass.trueHeading + 270);
-        testo += "\n" + "compass headingAccuracy: " + Input.compass.headingAccuracy;
-        testo += "\n" + "compass magneticHeading: " + Input.compass.magneticHeading;
-        testo += "\n" + "compass rawVector: " + Input.compass.rawVector;
-        testo += "\n" + "compass timestamp: " + Input.compass.timestamp;
+        //testo += "\n" + "compass headingAccuracy: " + Input.compass.headingAccuracy;
+        //testo += "\n" + "compass magneticHeading: " + Input.compass.magneticHeading;
+        //testo += "\n" + "compass rawVector: " + Input.compass.rawVector;
+        //testo += "\n" + "compass timestamp: " + Input.compass.timestamp;
 
 #if !UNITY_EDITOR && UNITY_ANDROID
         cubeTest.localPosition = new Vector3((nowPosX * 10), 0, (nowPosZ * 10));
@@ -108,5 +124,10 @@ public class ObtenerGPS : MonoBehaviour
         cameraT.position = new Vector3(cubeTest.position.x + offset.x, 1 + offset.y, cubeTest.position.z + offset.z);
 
         updateText.text = testo;
+    }
+
+    public void DebugMode(bool on)
+    {
+        modoDebug = on;
     }
 }
