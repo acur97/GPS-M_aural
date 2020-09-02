@@ -20,11 +20,13 @@ public class ObtenerGPS : MonoBehaviour
     //private double calcPosZ;
     private float nowPosX;
     private float nowPosZ;
-    private bool modoDebug = true;
+    private bool modoDebug = false;
 
     IEnumerator Start()
     {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+        cubeTestUI.sizeDelta = new Vector2(Screen.width / 10.8f, Screen.width / 10.8f);
 
         //probar si esta activado el servicio
         if (!Input.location.isEnabledByUser)
